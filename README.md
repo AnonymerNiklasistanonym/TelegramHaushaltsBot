@@ -20,6 +20,10 @@ This for example can be the dishwasher or washing machine.
    starteSpuelmaschine - Erinnere in 240 Minuten
    stoppeSpuelmaschine - Stoppe aktuelle Erinnerung
    ```
+7. Play around
+   - change the code
+   - add new commands or edit them by just editing [`config.json`](example.config.json)
+   - implement new user facing languages by adding to every `switch(language)` your language code and an implementation which also is necessary to do for the commands in [`config.json`](example.config.json) (also do not forget to change the `endUserLanguage` in it to your language code)
 
 ## Create a Telegram Bot
 
