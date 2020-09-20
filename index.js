@@ -333,7 +333,7 @@ const responseStartTimer = async (msg, machineType, language = 'de') => {
         case 'de':
             response += `Die ${commandInfoElement.name[language]} wurde gestartet`;
             const timeReady = new Date(new Date().getTime() + (commandInfoElement.waitTimeInMin * 60 * 1000))
-            response += `\n(Sie ist in ${commandInfoElement.waitTimeInMin} Minuten fertig - ${timeReady.toLocaleTimeString().substring(0,8).trim()})`;
+            response += `\n(Sie ist in ${commandInfoElement.waitTimeInMin} Minuten fertig - ${timeReady.toLocaleTimeString().substring(0, 8).trim()})`;
             const countTimesStartedMachine = currentStats.find(a => a.chatId === msg.chat.id).userStats.find(b => b.userId === msg.from?.id).started.length;
             response += `\n_${msg.from?.first_name} hat ${commandInfoElement.name[language]} schon ${countTimesStartedMachine} mal gestartet_`;
             break;

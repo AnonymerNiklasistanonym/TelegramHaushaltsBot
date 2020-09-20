@@ -25,6 +25,19 @@ This for example can be the dishwasher or washing machine.
    - add new commands or edit them by just editing [`config.json`](example.config.json)
    - implement new user facing languages by adding to every `switch(language)` your language code and an implementation which also is necessary to do for the commands in [`config.json`](example.config.json) (also do not forget to change the `endUserLanguage` in it to your language code)
 
+## Run on Raspberry Pi or Other Servers
+
+1. Using `nohup` which will not restart the service if it crashes but continue to run even though the ssh console is closed again:
+
+   ```sh
+   # Start and save nohup process ID in local text file
+   nohup npm start . > nohup_telegram_haushalts_bot.log &
+   echo $! > nohup_telegram_haushalts_bot_pid.txt
+   # Stop nohup process and remove local text file
+   kill -9 `cat nohup_telegram_haushalts_bot_pid.txt`
+   rm -f nohup_telegram_haushalts_bot_pid.txt
+   ```
+
 ## Create a Telegram Bot
 
 [A link to the official Telegram instructions](https://core.telegram.org/bots#3-how-do-i-create-a-bot)
