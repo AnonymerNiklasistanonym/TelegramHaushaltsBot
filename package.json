@@ -4,11 +4,20 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node ."
+    "start": "node .",
+    "lint": "eslint -c .eslintrc.js --ext .js index.js .eslintrc.js --fix"
   },
   "author": "",
   "license": "MIT",
   "dependencies": {
     "node-telegram-bot-api": "^0.50.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.9.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1"
   }
 }
