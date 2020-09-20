@@ -16,6 +16,7 @@ module.exports = {
     },
     rules: {
         'require-await': 'error',
-        indent: ['error', 4]
+        indent: ['error', 4],
+        quotes: ['error', 'single', { allowTemplateLiterals: true }]
     }
 }
