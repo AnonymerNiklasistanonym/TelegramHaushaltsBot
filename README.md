@@ -1,0 +1,55 @@
+# TelegramHaushaltsBot
+
+A simple Telegram bot that notifies users about household activities that are finished after they were started some time ago.
+This for example can be the dishwasher or washing machine.
+
+## Setup
+
+1. Create Telegram bot
+2. Copy the file [`example.config.json`](example.config.json) and rename it to `config.json`
+3. Replace all placeholders in this file:
+   - `telegramToken`: The Telegram bot token
+4. Run `npm install`
+5. Run `npm start`
+6. Update the Telegram bot command/helper info with the information from the command line output (it should look a bit like the following):
+
+   ```txt
+   hilfe - Befehl und Bot Informationen/Hilfe
+   starteWaschmaschine - Erinnere in 214 Minuten
+   stoppeWaschmaschine - Stoppe aktuelle Erinnerung
+   starteSpuelmaschine - Erinnere in 240 Minuten
+   stoppeSpuelmaschine - Stoppe aktuelle Erinnerung
+   ```
+
+## Create a Telegram Bot
+
+[A link to the official Telegram instructions](https://core.telegram.org/bots#3-how-do-i-create-a-bot)
+
+1. Create a Telegram account if you not already have one
+2. Talk to the contact [BotFather](https://t.me/botfather) with the message `/newbot` and set thus a name for the bot and get a token to use it
+3. Copy the token
+
+## Add Telegram Bot Command Helpers/Info
+
+[A link to Stackoverflow instructions](https://stackoverflow.com/questions/34457568/how-to-show-options-in-telegram-bot/34458436#34458436)
+
+1. Talk again to the contact [BotFather](https://t.me/botfather) with the message `/setcommands`
+2. Select your bot and send a message formatted as follows to enable command helpers/previews:
+
+   ```txt
+   start - Description 1
+   menu - Description 2
+   help - Description 3
+   stop - Description 4
+   ```
+
+## TODOs
+
+- [x] Implement basic reminders
+- [x] Add command descriptions to basic reminders of Bot
+- [x] Survive crash of bot (the reminders)
+- [ ] Only allow one waschmaschine/spuelmaschine to be run at once
+- [x] Send messages if no one is answering until someone answers
+- [x] Read token and other configurations from JSON files
+- [ ] Cancel Waschmaschine/Spülmaschine with command /stoppeSpuelmaschine and thus rename the others to /starteSpuelmaschine
+- [x] Add some stats to slightly gamify the process

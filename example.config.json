@@ -1,0 +1,38 @@
+{
+    "telegramToken": "thisShouldBe:yourTokenOfTheTelegramBot",
+    "requireReplyNumberOfReminderMessages": 15,
+    "requireReplyTimeBetweenReminderMessagesInMin": 1,
+    "endUserLanguage": "de",
+    "reminderCommands": [
+        {
+            "id": "washingMachine",
+            "name": {
+                "de": "Waschmaschine"
+            },
+            "commandPost": {
+                "de": "waschmaschine"
+            },
+            "waitTimeInMin": 217
+        },
+        {
+            "id": "dryer",
+            "name": {
+                "de": "Trockner"
+            },
+            "commandPost": {
+                "de": "trockner"
+            },
+            "waitTimeInMin": 100
+        },
+        {
+            "id": "dishwasher",
+            "name": {
+                "de": "Spülmaschine"
+            },
+            "commandPost": {
+                "de": "spuelmaschine"
+            },
+            "waitTimeInMin": 240
+        }
+    ]
+}
