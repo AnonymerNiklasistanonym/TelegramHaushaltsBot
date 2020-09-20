@@ -165,8 +165,9 @@ const getStatus = async (chatId, machineType, language = 'de') => {
  * @param {number} chatId The request message chat user id
  * @param {string} machineType
  * @param {string} language
+ * @param {boolean} noMessageOnNotFound Do not send a message if no reminder is found
  */
-const stopReminder = async (chatId, userId, machineType, language = 'de') => {
+const stopReminder = async (chatId, userId, machineType, language = 'de', noMessageOnNotFound = false) => {
     // Get machine related information
     const commandInfoElement = reminderCommandsInfo.find(a => a.id === machineType)
     if (commandInfoElement === undefined) {
@@ -190,16 +191,18 @@ const stopReminder = async (chatId, userId, machineType, language = 'de') => {
         }
         return await bot.sendMessage(chatId, reminderFoundMessage)
     } else {
-        let noReminderFoundMessage = ''
-        switch (language) {
-        case 'de':
-            noReminderFoundMessage += `Es wurde aktuell keine Erinnerung bezüglich ${commandInfoElement.name[language]} gefunden`
-            break
-        default:
-            console.error(`The specified language (${language}) is not implemented`)
-            return process.exit(1)
+        if (!noMessageOnNotFound) {
+            let noReminderFoundMessage = ''
+            switch (language) {
+            case 'de':
+                noReminderFoundMessage += `Es wurde aktuell keine Erinnerung bezüglich ${commandInfoElement.name[language]} gefunden`
+                break
+            default:
+                console.error(`The specified language (${language}) is not implemented`)
+                return process.exit(1)
+            }
+            return await bot.sendMessage(chatId, noReminderFoundMessage)
         }
-        return await bot.sendMessage(chatId, noReminderFoundMessage)
     }
 }
 
@@ -475,6 +478,10 @@ for (const commandInfoElement of reminderCommandsInfo) {
     }
     console.log(`Check messages for the the commands: '${commandStart}', '${commandStatus}', '${commandStop}'`)
     bot.onText(new RegExp(commandStart), async (msg, match) => {
+        const messageKillOldReminder = await stopReminder(msg.chat.id, msg?.from.id, commandInfoElement.id, config.endUserLanguage, true)
+        if (messageKillOldReminder !== undefined) {
+            console.log(`I have sent a response to '/${commandStart}' to kill old reminder message: ${JSON.stringify(messageKillOldReminder)}`)
+        }
         const message = await responseStartTimer(msg, commandInfoElement.id, config.endUserLanguage)
         console.log(`I have sent a response to '/${commandStart}' message: ${JSON.stringify(message)}`)
     })

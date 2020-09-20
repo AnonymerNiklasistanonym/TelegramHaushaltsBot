@@ -65,7 +65,7 @@ This for example can be the dishwasher or washing machine.
 - [x] Implement basic reminders
 - [x] Add command descriptions to basic reminders of Bot
 - [x] Survive crash of bot (the reminders)
-- [ ] Only allow one waschmaschine/spuelmaschine to be run at once
+- [x] Only allow one waschmaschine/spuelmaschine to be run at once
 - [x] Send messages if no one is answering until someone answers
 - [x] Read token and other configurations from JSON files
 - [x] Cancel Waschmaschine/Spülmaschine with command /stoppeSpuelmaschine and thus rename the others to /starteSpuelmaschine
