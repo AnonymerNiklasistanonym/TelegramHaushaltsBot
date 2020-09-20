@@ -68,5 +68,5 @@ This for example can be the dishwasher or washing machine.
 - [ ] Only allow one waschmaschine/spuelmaschine to be run at once
 - [x] Send messages if no one is answering until someone answers
 - [x] Read token and other configurations from JSON files
-- [ ] Cancel Waschmaschine/Spülmaschine with command /stoppeSpuelmaschine and thus rename the others to /starteSpuelmaschine
+- [x] Cancel Waschmaschine/Spülmaschine with command /stoppeSpuelmaschine and thus rename the others to /starteSpuelmaschine
 - [x] Add some stats to slightly gamify the process
