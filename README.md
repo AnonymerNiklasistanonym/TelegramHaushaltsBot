@@ -37,6 +37,7 @@ This for example can be the dishwasher or washing machine.
    kill -9 `cat nohup_telegram_haushalts_bot_pid.txt`
    rm -f nohup_telegram_haushalts_bot_pid.txt
    ```
+   **Attention:** The killing of the process does not seem to work - I currently need to go into `htop` search  with `F4` for `node` and kill the related process manually each time
 
 ## Create a Telegram Bot
 
