@@ -7,30 +7,36 @@
         {
             "id": "washingMachine",
             "name": {
-                "de": "Waschmaschine"
+                "de": "Waschmaschine",
+                "en": "washing machine"
             },
             "commandPost": {
-                "de": "waschmaschine"
+                "de": "waschmaschine",
+                "en": "washingmachine"
             },
             "waitTimeInMin": 217
         },
         {
             "id": "dryer",
             "name": {
-                "de": "Trockner"
+                "de": "Trockner",
+                "en": "dryer"
             },
             "commandPost": {
-                "de": "trockner"
+                "de": "trockner",
+                "en": "dryer"
             },
             "waitTimeInMin": 100
         },
         {
             "id": "dishwasher",
             "name": {
-                "de": "Spülmaschine"
+                "de": "Spülmaschine",
+                "en": "dishwasher"
             },
             "commandPost": {
-                "de": "spuelmaschine"
+                "de": "spuelmaschine",
+                "en": "dishwasher"
             },
             "waitTimeInMin": 240
         }
