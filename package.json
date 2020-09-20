@@ -1,14 +1,25 @@
 {
   "name": "telegram-haushalts-bot",
   "version": "1.0.0",
-  "description": "",
+  "description": "A simple Telegram bot that notifies users about household activities that are finished after they were started some time ago like starting the dishwasher or washing machine",
+  "homepage": "https://github.com/AnonymerNiklasistanonym/TelegramHaushaltsBot#readme",
+  "bugs": {
+    "url": "https://github.com/AnonymerNiklasistanonym/TelegramHaushaltsBot/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AnonymerNiklasistanonym/TelegramHaushaltsBot.git"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "AnonymerNiklasistanonym",
+    "url": "https://github.com/AnonymerNiklasistanonym"
+  },
   "main": "index.js",
   "scripts": {
-    "start": "node .",
-    "lint": "eslint -c .eslintrc.js --ext .js index.js .eslintrc.js --fix"
+    "lint": "eslint -c .eslintrc.js --ext .js index.js .eslintrc.js --fix",
+    "start": "node ."
   },
-  "author": "",
-  "license": "MIT",
   "dependencies": {
     "node-telegram-bot-api": "^0.50.0"
   },

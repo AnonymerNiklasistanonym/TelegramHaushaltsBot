@@ -1,7 +1,6 @@
 # TelegramHaushaltsBot
 
-A simple Telegram bot that notifies users about household activities that are finished after they were started some time ago.
-This for example can be the dishwasher or washing machine.
+A simple Telegram bot that notifies users about household activities that are finished after they were started some time ago like starting the dishwasher or washing machine.
 
 ## Setup
 
