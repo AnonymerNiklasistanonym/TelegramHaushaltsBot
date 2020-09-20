@@ -1,6 +1,7 @@
 const TelegramBot = require('node-telegram-bot-api')
 const fs = require('fs')
 const path = require('path')
+const os = require('os')
 
 // Set paths to local files
 const configFilePath = path.join(__dirname, 'config.json')
@@ -47,6 +48,8 @@ const currentStats = JSON.parse(fs.readFileSync(statsFilePath).toString()).map(a
         stopped: b.stopped.map(c => ({ ...c, date: new Date(c.date) }))
     }))
 }))
+// > Bot start date
+const botStartDate = new Date()
 
 // Create a bot that uses 'polling' to fetch new updates
 const bot = new TelegramBot(config.telegramToken, {
@@ -95,7 +98,7 @@ const updateReminders = async (action, chatId, machineType = undefined, startDat
         if (existingElementIndex < 0) {
             console.warn(`Running reminder timeout was not found (chatId='${chatId}', machineType='${machineType}')`)
         } else {
-            console.log(`Clear running reminder timeout (${JSON.stringify(currentReminders[existingElementIndex])})`)
+            console.log(`Clear running reminder timeout (chatId='${chatId}', machineType='${machineType}')`)
             clearTimeout(currentReminders[existingElementIndex].timeoutId)
             currentReminders.splice(existingElementIndex, 1)
         }
@@ -110,6 +113,94 @@ const updateReminders = async (action, chatId, machineType = undefined, startDat
         machineType: a.machineType,
         startDate: a.startDate
     }))))
+}
+
+/**
+ * AAAA
+ * @param {number} chatId The request message chat id
+ * @param {string} machineType
+ * @param {string} language
+ */
+const getStatus = async (chatId, machineType, language = 'de') => {
+    // Get machine related information
+    const commandInfoElement = reminderCommandsInfo.find(a => a.id === machineType)
+    if (commandInfoElement === undefined) {
+        console.error(`The specified machine (${machineType}) is not implemented`)
+        process.exit(1)
+    }
+    const currentReminder = currentReminders.find(a => a.chatId === chatId && a.machineType === machineType)
+    if (currentReminder !== undefined) {
+        // Found an active reminder
+        let reminderFoundMessage = ''
+        switch (language) {
+        case 'de': {
+            reminderFoundMessage += `Es wurde eine Erinnerung bezüglich ${commandInfoElement.name[language]} gefunden:`
+            reminderFoundMessage += `\nSie wurde um ${currentReminder.startDate.toLocaleTimeString(language)} Uhr gestartet`
+            const newDate = new Date(currentReminder.startDate.getTime() + (commandInfoElement.waitTimeInMin * 60 * 1000))
+            reminderFoundMessage += ` und endet um ${newDate.toLocaleTimeString(language)} Uhr`
+            break
+        }
+        default:
+            console.error(`The specified language (${language}) is not implemented`)
+            return process.exit(1)
+        }
+        return await bot.sendMessage(chatId, reminderFoundMessage)
+    } else {
+        let noReminderFoundMessage = ''
+        switch (language) {
+        case 'de':
+            noReminderFoundMessage += `Es wurde aktuell keine Erinnerung bezüglich ${commandInfoElement.name[language]} gefunden`
+            break
+        default:
+            console.error(`The specified language (${language}) is not implemented`)
+            return process.exit(1)
+        }
+        return await bot.sendMessage(chatId, noReminderFoundMessage)
+    }
+}
+
+/**
+ * AAAA
+ * @param {number} chatId The request message chat id
+ * @param {number} chatId The request message chat user id
+ * @param {string} machineType
+ * @param {string} language
+ */
+const stopReminder = async (chatId, userId, machineType, language = 'de') => {
+    // Get machine related information
+    const commandInfoElement = reminderCommandsInfo.find(a => a.id === machineType)
+    if (commandInfoElement === undefined) {
+        console.error(`The specified machine (${machineType}) is not implemented`)
+        process.exit(1)
+    }
+    const currentReminder = currentReminders.find(a => a.chatId === chatId && a.machineType === machineType)
+    if (currentReminder !== undefined) {
+        // Found an active reminder
+        await updateStats(chatId, userId, machineType, 'stop')
+        updateReminders('remove', chatId, machineType)
+        let reminderFoundMessage = ''
+        switch (language) {
+        case 'de': {
+            reminderFoundMessage += `Die Erinnerung bezüglich ${commandInfoElement.name[language]} gestartet um ${currentReminder.startDate.toLocaleTimeString(language)} Uhr wurde gestoppt`
+            break
+        }
+        default:
+            console.error(`The specified language (${language}) is not implemented`)
+            return process.exit(1)
+        }
+        return await bot.sendMessage(chatId, reminderFoundMessage)
+    } else {
+        let noReminderFoundMessage = ''
+        switch (language) {
+        case 'de':
+            noReminderFoundMessage += `Es wurde aktuell keine Erinnerung bezüglich ${commandInfoElement.name[language]} gefunden`
+            break
+        default:
+            console.error(`The specified language (${language}) is not implemented`)
+            return process.exit(1)
+        }
+        return await bot.sendMessage(chatId, noReminderFoundMessage)
+    }
 }
 
 /**
@@ -239,7 +330,7 @@ for (let i = currentReminders.length - 1; i >= 0; i--) {
 const responseHelp = async (msg, language = 'de') => {
     let response = ''
     switch (language) {
-    case 'de':
+    case 'de': {
         response += `
 Es gibt die folgenden Befehle:
 `
@@ -249,7 +340,11 @@ Es gibt die folgenden Befehle:
 - /stoppe${a.commandPost[language]}: _Stoppe die Erinnerung_
 - /status${a.commandPost[language]}: _Status der Erinnerung_
             `).join('')
+
+        const dayCount = Math.round(Math.abs((new Date().getTime() - botStartDate.getTime()) / (24 * 60 * 60 * 1000)))
+        response += `\n_Der Bot läuft aktuell auf '${os.hostname}' seit ${botStartDate.toLocaleString(language)} (${dayCount} Tage)_`
         break
+    }
     default:
         console.error(`The specified language (${language}) is not implemented`)
         return process.exit(1)
@@ -333,7 +428,7 @@ const responseStartTimer = async (msg, machineType, language = 'de') => {
     case 'de': {
         response += `Die ${commandInfoElement.name[language]} wurde gestartet`
         const timeReady = new Date(new Date().getTime() + (commandInfoElement.waitTimeInMin * 60 * 1000))
-        response += `\n(Sie ist in ${commandInfoElement.waitTimeInMin} Minuten fertig - ${timeReady.toLocaleTimeString().substring(0, 8).trim()})`
+        response += `\n(Sie ist in ${commandInfoElement.waitTimeInMin} Minuten fertig - ${timeReady.toLocaleTimeString(language)})`
         const countTimesStartedMachine = currentStats.find(a => a.chatId === msg.chat.id).userStats.find(b => b.userId === msg.from?.id).started.length
         response += `\n_${msg.from?.first_name} hat ${commandInfoElement.name[language]} schon ${countTimesStartedMachine} mal gestartet_`
         break
@@ -382,17 +477,15 @@ for (const commandInfoElement of reminderCommandsInfo) {
     bot.onText(new RegExp(commandStart), async (msg, match) => {
         const message = await responseStartTimer(msg, commandInfoElement.id, config.endUserLanguage)
         console.log(`I have sent a response to '/${commandStart}' message: ${JSON.stringify(message)}`)
-        const message2 = responseStartTimer(msg, commandInfoElement.id, config.endUserLanguage)
-        console.log(`I have sent a response to '/${commandStart}' message: ${JSON.stringify(message2)}`)
     })
     bot.onText(new RegExp(commandStatus), async (msg, match) => {
         // TODO Get current running reminder timeout of chat by chatID
-        // const message = await responseStartTimer(msg, commandInfoElement.id, config.endUserLanguage);
-        // console.log(`TODO I have sent a response to '/${commandStatus}' message: ${JSON.stringify(message)}`)
+        const message = await getStatus(msg.chat.id, commandInfoElement.id, config.endUserLanguage)
+        console.log(`I have sent a response to '/${commandStatus}' message: ${JSON.stringify(message)}`)
     })
     bot.onText(new RegExp(commandStop), async (msg, match) => {
         // TODO Stop current running reminder timeout of chat by chatID
-        // const message = await responseStartTimer(msg, commandInfoElement.id, config.endUserLanguage);
-        // console.log(`TODO I have sent a response to '/${commandStop}' message: ${JSON.stringify(message)}`)
+        const message = await stopReminder(msg.chat.id, msg?.from.id, commandInfoElement.id, config.endUserLanguage)
+        console.log(`I have sent a response to '/${commandStop}' message: ${JSON.stringify(message)}`)
     })
 }
