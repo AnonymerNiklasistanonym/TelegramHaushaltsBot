@@ -60,6 +60,12 @@ A simple Telegram bot that notifies users about household activities that are fi
    stop - Description 4
    ```
 
+## Add Telegram Bot Image
+
+1. (This step can be skipped if you wat to use your own image) Create the image by executing the script [`convertToPng.sh`](image/convertToPng.sh) in the directory [`image`](image)
+2. Talk again to the contact [BotFather](https://t.me/botfather) with the message `/setuserpic`
+3. Select your bot and send in the following message the created image `image/out.png` (or with your own image)
+
 ## TODOs
 
 - [x] Implement basic reminders
