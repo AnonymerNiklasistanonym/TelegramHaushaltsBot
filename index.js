@@ -224,7 +224,7 @@ const createReminder = async (chatId, messageDate, commandInfoElement, isRestart
         let responseReminder = ''
         switch (config.endUserLanguage) {
         case 'de':
-            responseReminder += `Die ${commandInfoElement.name[config.endUserLanguage]} ist fertig`
+            responseReminder += `${commandInfoElement.name[config.endUserLanguage]} ist fertig`
             if (replyRequired) {
                 responseReminder += '\nWenn Zeit bitte dieser Nachricht antworten'
             }
@@ -246,7 +246,7 @@ const createReminder = async (chatId, messageDate, commandInfoElement, isRestart
                 let responseToAcceptedReminder = ''
                 switch (config.endUserLanguage) {
                 case 'de': {
-                    responseToAcceptedReminder += `${msgReply.from?.first_name} übernimmt die ${commandInfoElement.name[config.endUserLanguage]}`
+                    responseToAcceptedReminder += `${msgReply.from?.first_name} übernimmt ${commandInfoElement.name[config.endUserLanguage]}`
                     const countTimesAcceptedMachine = currentStats.find(a => a.chatId === chatId).userStats.find(b => b.userId === msgReply.from?.id).accepted.length
                     responseToAcceptedReminder += `\n_${msgReply.from?.first_name} hat bezüglich ${commandInfoElement.name[config.endUserLanguage]} schon ${countTimesAcceptedMachine} mal geantwortet_`
                     break
