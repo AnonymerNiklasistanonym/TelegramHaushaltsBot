@@ -9,8 +9,9 @@ A simple Telegram bot that notifies users about household activities that are fi
 3. Replace all placeholders in this file:
    - `telegramToken`: The Telegram bot token
 4. Run `npm install`
-5. Run `npm start`
-6. Update the Telegram bot command/helper info with the information from the command line output (it should look a bit like the following):
+5. Run `npm run build`
+6. Run `npm run start`
+7. Update the Telegram bot command/helper info with the information from the command line output (it should look a bit like the following):
 
    ```txt
    hilfe - Befehl und Bot Informationen/Hilfe
@@ -19,7 +20,7 @@ A simple Telegram bot that notifies users about household activities that are fi
    starteSpuelmaschine - Erinnere in 240 Minuten
    stoppeSpuelmaschine - Stoppe aktuelle Erinnerung
    ```
-7. Play around
+8. Play around
    - change the code
    - add new commands or edit them by just editing [`config.json`](example.config.json)
    - implement new user facing languages by adding to every `switch(language)` your language code and an implementation which also is necessary to do for the commands in [`config.json`](example.config.json) (also do not forget to change the `endUserLanguage` in it to your language code)
@@ -76,3 +77,106 @@ A simple Telegram bot that notifies users about household activities that are fi
 - [x] Read token and other configurations from JSON files
 - [x] Cancel Waschmaschine/Spülmaschine with command /stoppeSpuelmaschine and thus rename the others to /starteSpuelmaschine
 - [x] Add some stats to slightly gamify the process
+- [x] Convert JavaScript project to Typescript
+      - Add `tsconfig.json` file
+
+        ```json
+        {
+           "compilerOptions": {
+              "module": "CommonJS",
+              "esModuleInterop": true,
+              "target": "ES2020",
+              "noImplicitAny": true,
+              "moduleResolution": "node",
+              "sourceMap": true,
+              "removeComments": true,
+              "outDir": "dist",
+              "rootDir": "src",
+              "baseUrl": ".",
+              "strict": true,
+              "strictNullChecks": true,
+              "forceConsistentCasingInFileNames": true
+           },
+           "include": [
+              "**/*.ts",
+              "index.ts"
+           ],
+           "exclude": [
+              "node_modules"
+           ]
+        }
+        ```
+
+      - Add `npm` packages:
+        - Add TypeScript to JavaScript compiler: `npm install --save-dev typescript`
+        - Install node types: `npm install --save-dev @types/node @types/node-telegram-bot-api`
+        - Install eslint TypeScript specific packages: `npm install --save-dev @typescript-eslint/parser @typescript-eslint/eslint-plugin eslint-plugin-jsdoc eslint-plugin-prefer-arrow`
+
+      - Add `package.json` scripts:
+        - `build`: `tsc`
+
+      - Modify `package.json` scripts:
+        - Rename `"main": "index.js",` to `"main": "dist/index.js",`
+        -  Rename `"lint": "eslint -c .eslintrc.js --ext .js index.js .eslintrc.js --fix",` to `"lint": "eslint -c .eslintrc.js --ext .ts src .eslintrc.js --fix",`
+
+      - Rename all `.js` files to `.ts` and move them into the `src` directory and rename imports (replace `require` with `import { ... } from ...`)
+         - Also fix integrated filepaths by adding `..` to each from the current file location
+
+      - Add TypeScript specific `eslint` rules for better linting (catch if any promise is not *awaited*)
+
+        ```js
+        module.exports = {
+            // ...
+            extends: [
+               // Remove: 'standard',
+                // ...
+                "plugin:@typescript-eslint/recommended",
+                "plugin:@typescript-eslint/recommended-requiring-type-checking"
+            ],
+            parser: "@typescript-eslint/parser",
+            parserOptions: {
+               // ...
+               project: [
+                     "tsconfig.json",
+               ],
+               sourceType: "module"
+            },
+            plugins: [
+               // ...
+               "jsdoc",
+               "@typescript-eslint",
+               "prefer-arrow"
+            ],
+            // ...
+            rules: {
+                // Remove indent and quotes
+                "@typescript-eslint/array-type": "error",
+                "@typescript-eslint/indent": "error",
+                "@typescript-eslint/member-delimiter-style": [
+                      "error",
+                      {
+                         multiline: {
+                            delimiter: "none",
+                            requireLast: true
+                         },
+                         singleline: {
+                            delimiter: "semi",
+                            requireLast: false
+                         }
+                      }
+                ],
+                "@typescript-eslint/restrict-template-expressions": ["error", { allowBoolean: true }],
+                "@typescript-eslint/no-explicit-any": "off",
+                "@typescript-eslint/no-floating-promises": "error",
+                "@typescript-eslint/no-misused-promises": [ "error", { checksVoidReturn: false } ],
+                "@typescript-eslint/no-parameter-properties": "off",
+                "@typescript-eslint/no-use-before-define": "error",
+                "@typescript-eslint/prefer-for-of": "error",
+                "@typescript-eslint/prefer-function-type": "error",
+                "@typescript-eslint/quotes": [ "error", "double" ],
+                "@typescript-eslint/semi": "error",
+                "@typescript-eslint/unified-signatures": "error",
+               // existing rules
+            }
+         }
+         ```
