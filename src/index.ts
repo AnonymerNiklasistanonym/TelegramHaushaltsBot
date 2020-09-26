@@ -2,6 +2,8 @@ import TelegramBot from "node-telegram-bot-api";
 import fs from "fs";
 import path from "path";
 import os from "os";
+import { Language } from "./types";
+import type { Config, ConfigReminderCommandsElement, CurrentReminder, CurrentStats, RemindersFileElement, StatsFileElement } from "./types";
 
 // Set paths to local files
 const configFilePath = path.join(__dirname, "..", "config.json");
@@ -24,69 +26,20 @@ if (!fs.existsSync(statsFilePath)) {
     fs.writeFileSync(statsFilePath, JSON.stringify([]));
 }
 
-enum Language {
-    DE="de",
-    EN="en"
-}
-
-interface Config {
-    telegramToken: string
-    requireReplyNumberOfReminderMessages: number
-    requireReplyTimeBetweenReminderMessagesInMin: number
-    endUserLanguage: Language
-    reminderCommands: ConfigReminderCommandElement[]
-}
-interface ConfigReminderCommandElement {
-    id: string
-    name: { [Language.DE]: string; [Language.EN]: string }
-    commandPost: { [Language.DE]: string; [Language.EN]: string }
-    waitTimeInMin: number
-}
-
 // Load configuration file
 const config = JSON.parse(fs.readFileSync(configFilePath).toString()) as Config;
-
-interface RemindersFileElement {
-    chatId: number
-    machineType: string
-    startDate: string
-}
-interface CurrentReminderElement {
-    chatId: number
-    machineType: string
-    startDate: Date
-    // is undefined if just now imported
-    timeoutId?: NodeJS.Timeout
-}
-interface StatsFileElement {
-    chatId: number
-    userStats: StatsFileElementUserStatsElement[]
-}
-interface StatsFileElementUserStatsElement {
-    userId: number
-    started: StatsFileElementUserStatsElementDateMachineType[]
-    accepted: StatsFileElementUserStatsElementDateMachineTypeAccepted[]
-    stopped: StatsFileElementUserStatsElementDateMachineType[]
-}
-interface StatsFileElementUserStatsElementDateMachineType {
-    date: Date
-    machineType: string
-}
-interface StatsFileElementUserStatsElementDateMachineTypeAccepted extends StatsFileElementUserStatsElementDateMachineType {
-    try: number
-}
 
 // Create global objects
 // > Command info list
 const reminderCommandsInfo = config.reminderCommands;
 // > Reminder info list
-const currentReminders: CurrentReminderElement[] = (JSON.parse(fs.readFileSync(remindersFilePath).toString()) as RemindersFileElement[]).map(a => ({
+const currentReminders: CurrentReminder[] = (JSON.parse(fs.readFileSync(remindersFilePath).toString()) as RemindersFileElement[]).map(a => ({
     ...a,
     // overwrite startDate string with date object
     startDate: new Date(a.startDate)
 }));
 // > Stats info list
-const currentStats = (JSON.parse(fs.readFileSync(statsFilePath).toString()) as StatsFileElement[]).map(a => ({
+const currentStats: CurrentStats[] = (JSON.parse(fs.readFileSync(statsFilePath).toString()) as StatsFileElement[]).map(a => ({
     ...a,
     userStats: a.userStats.map(b => ({
         ...b,
@@ -340,7 +293,7 @@ const stopReminder = async (chatId: number, userId: number, machineType: string,
  * @param commandInfoElement
  * @param isRestarted
  */
-const createReminder = async (chatId: number, messageDate: Date, commandInfoElement: ConfigReminderCommandElement, isRestarted = false) => {
+const createReminder = async (chatId: number, messageDate: Date, commandInfoElement: ConfigReminderCommandsElement, isRestarted = false) => {
     // TODO Fix calculation to o
     const timeInMsTillReminder = (messageDate.getTime() + (commandInfoElement.waitTimeInMin * 60 * 1000)) - new Date().getTime();
     console.log("the timer will stop in", timeInMsTillReminder, Math.round(timeInMsTillReminder / 60 / 1000), messageDate.toTimeString());
