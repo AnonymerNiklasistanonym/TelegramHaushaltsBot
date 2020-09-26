@@ -80,32 +80,32 @@ A simple Telegram bot that notifies users about household activities that are fi
 - [x] Convert JavaScript project to Typescript
       - Add `tsconfig.json` file
 
-        ```json
-        {
-           "compilerOptions": {
-              "module": "CommonJS",
-              "esModuleInterop": true,
-              "target": "ES2020",
-              "noImplicitAny": true,
-              "moduleResolution": "node",
-              "sourceMap": true,
-              "removeComments": true,
-              "outDir": "dist",
-              "rootDir": "src",
-              "baseUrl": ".",
-              "strict": true,
-              "strictNullChecks": true,
-              "forceConsistentCasingInFileNames": true
-           },
-           "include": [
-              "**/*.ts",
-              "index.ts"
-           ],
-           "exclude": [
-              "node_modules"
-           ]
-        }
-        ```
+```json
+{
+    "compilerOptions": {
+        "module": "CommonJS",
+        "esModuleInterop": true,
+        "target": "ES2020",
+        "noImplicitAny": true,
+        "moduleResolution": "node",
+        "sourceMap": true,
+        "removeComments": true,
+        "outDir": "dist",
+        "rootDir": "src",
+        "baseUrl": ".",
+        "strict": true,
+        "strictNullChecks": true,
+        "forceConsistentCasingInFileNames": true
+   },
+   "include": [
+       "**/*.ts",
+       "index.ts"
+   ],
+   "exclude": [
+       "node_modules"
+    ]
+}
+```
 
       - Add `npm` packages:
         - Add TypeScript to JavaScript compiler: `npm install --save-dev typescript`
@@ -124,59 +124,59 @@ A simple Telegram bot that notifies users about household activities that are fi
 
       - Add TypeScript specific `eslint` rules for better linting (catch if any promise is not *awaited*)
 
-        ```js
-        module.exports = {
-            // ...
-            extends: [
-               // Remove: 'standard',
-                // ...
-                "plugin:@typescript-eslint/recommended",
-                "plugin:@typescript-eslint/recommended-requiring-type-checking"
-            ],
-            parser: "@typescript-eslint/parser",
-            parserOptions: {
-               // ...
-               project: [
-                     "tsconfig.json",
-               ],
-               sourceType: "module"
-            },
-            plugins: [
-               // ...
-               "jsdoc",
-               "@typescript-eslint",
-               "prefer-arrow"
-            ],
-            // ...
-            rules: {
-                // Remove indent and quotes
-                "@typescript-eslint/array-type": "error",
-                "@typescript-eslint/indent": "error",
-                "@typescript-eslint/member-delimiter-style": [
-                      "error",
-                      {
-                         multiline: {
-                            delimiter: "none",
-                            requireLast: true
-                         },
-                         singleline: {
-                            delimiter: "semi",
-                            requireLast: false
-                         }
-                      }
-                ],
-                "@typescript-eslint/restrict-template-expressions": ["error", { allowBoolean: true }],
-                "@typescript-eslint/no-explicit-any": "off",
-                "@typescript-eslint/no-floating-promises": "error",
-                "@typescript-eslint/no-misused-promises": [ "error", { checksVoidReturn: false } ],
-                "@typescript-eslint/no-parameter-properties": "off",
-                "@typescript-eslint/no-use-before-define": "error",
-                "@typescript-eslint/prefer-for-of": "error",
-                "@typescript-eslint/prefer-function-type": "error",
-                "@typescript-eslint/quotes": [ "error", "double" ],
-                "@typescript-eslint/semi": "error",
-                "@typescript-eslint/unified-signatures": "error",
-               // existing rules
-            }
-         }
-         ```
+```js
+module.exports = {
+    // ...
+    extends: [
+        // Remove: 'standard',
+        // ...
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking"
+    ],
+    parser: "@typescript-eslint/parser",
+    parserOptions: {
+       // ...
+       project: [
+             "tsconfig.json",
+       ],
+       sourceType: "module"
+    },
+    plugins: [
+       // ...
+       "jsdoc",
+       "@typescript-eslint",
+       "prefer-arrow"
+    ],
+    // ...
+    rules: {
+        // Remove indent and quotes
+        "@typescript-eslint/array-type": "error",
+        "@typescript-eslint/indent": "error",
+        "@typescript-eslint/member-delimiter-style": [
+              "error",
+              {
+                 multiline: {
+                    delimiter: "none",
+                    requireLast: true
+                 },
+                 singleline: {
+                    delimiter: "semi",
+                    requireLast: false
+                 }
+              }
+        ],
+        "@typescript-eslint/restrict-template-expressions": ["error", { allowBoolean: true }],
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-floating-promises": "error",
+        "@typescript-eslint/no-misused-promises": [ "error", { checksVoidReturn: false } ],
+        "@typescript-eslint/no-parameter-properties": "off",
+        "@typescript-eslint/no-use-before-define": "error",
+        "@typescript-eslint/prefer-for-of": "error",
+        "@typescript-eslint/prefer-function-type": "error",
+        "@typescript-eslint/quotes": [ "error", "double" ],
+        "@typescript-eslint/semi": "error",
+        "@typescript-eslint/unified-signatures": "error",
+       // existing rules
+    }
+}
+```
