@@ -469,9 +469,9 @@ const responseStartTimer = async (msg: TelegramBot.Message, machineType: string,
     let response = "";
     switch (language) {
         case "de": {
-            response += `Die ${commandInfoElement.name[language]} wurde gestartet`;
+            response += `${commandInfoElement.name[language]} wurde gestartet`;
             const timeReady = new Date(new Date().getTime() + (commandInfoElement.waitTimeInMin * 60 * 1000));
-            response += `\n(Sie ist in ${commandInfoElement.waitTimeInMin} Minuten fertig - ${timeReady.toLocaleTimeString(language)})`;
+            response += `\n(Ist in ${commandInfoElement.waitTimeInMin} Minuten fertig - ${timeReady.toLocaleTimeString(language)})`;
             const countTimesStartedMachine = currentStats.find(a => a.chatId === msg.chat.id)?.userStats.find(b => b.userId === messageFromId)?.started.length;
             if (countTimesStartedMachine === undefined) {
                 throw Error("Count times started machine was undefined");
