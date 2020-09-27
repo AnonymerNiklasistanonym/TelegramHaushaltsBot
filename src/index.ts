@@ -262,7 +262,7 @@ const stopReminder = async (chatId: number, userId: number, machineType: string,
         let reminderFoundMessage = "";
         switch (language) {
             case "de": {
-                reminderFoundMessage += `Die Erinnerung bezüglich ${commandInfoElement.name[language]} gestartet um ${currentReminder.startDate.toLocaleTimeString(language)} Uhr wurde gestoppt`;
+                reminderFoundMessage += `Die Erinnerung bezüglich ${commandInfoElement.name[language]} (gestartet um ${currentReminder.startDate.toLocaleTimeString(language)} Uhr) wurde gestoppt`;
                 break;
             }
             default:
